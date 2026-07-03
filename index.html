@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Christopher Rhodes</title>
+
   <style>
     :root {
       --bg: #050607;
@@ -18,7 +19,7 @@
 
     body {
       margin: 0;
-      min-height: 100vh;
+      min-height: 125vh;
       font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
         radial-gradient(circle at top left, rgba(23,199,201,.18), transparent 32rem),
@@ -49,7 +50,7 @@
     }
 
     .query {
-      min-height: 4.5rem;
+      min-height: 3.5rem;
       white-space: pre-wrap;
       line-height: 1.5;
       color: #dffcff;
@@ -66,6 +67,17 @@
 
     @keyframes blink {
       50% { opacity: 0; }
+    }
+
+    .status {
+      color: var(--muted);
+      font-size: .85rem;
+      margin-top: .8rem;
+      min-height: 1.2rem;
+    }
+
+    .status.complete {
+      color: var(--accent);
     }
 
     .result {
@@ -167,11 +179,13 @@
     }
   </style>
 </head>
+
 <body>
   <main>
-    <div class="prompt mono">chris@github-pages:~$ run profile.sql</div>
+    <div class="prompt mono" id="prompt">Connection established.</div>
 
     <div class="query mono" id="query"></div>
+    <div class="status mono" id="status">Database: ChristopherRhodes</div>
 
     <section class="result mono" id="result">
       <div class="row">
@@ -198,44 +212,39 @@
     <section class="links" id="links">
       <a href="https://www.linkedin.com/in/chrisjrhodes">
         <span>
-           <span>Linkedin</span>
-            <span class="small">Leadership, Data & Analytics</span>
-        </span>
-        <span>↗</span>
-      </a>
-
-      <a href="https://www.instagram.com/smallthingssorted">
-        <span>
-          <span>Small Things Sorted</span>
-            <span class="small">Unique pieces made to order</span>
-          <span class="small">@smallthingssorted</span>
+          Professional
+          <span class="small">Leadership, data & analytics</span>
         </span>
         <span>↗</span>
       </a>
 
       <a href="https://www.instagram.com/ukchristography">
         <span>
-          <span>Photography</span>
-            <span class="small">Wildlife, Travel, Airshows</span>
-          <span class="small">@ukchristography</span>
+          Photography
+          <span class="small">Landscape, wildlife & travel</span>
+        </span>
+        <span>↗</span>
+      </a>
+
+      <a href="https://www.instagram.com/smallthingssorted">
+        <span>
+          Small Things Sorted
+          <span class="small">Bespoke creations & personalised gifts</span>
         </span>
         <span>↗</span>
       </a>
     </section>
 
-    <footer class="mono">SELECT * FROM curiosity WHERE connected = TRUE;</footer>
+    <footer class="mono">-- End of result set</footer>
   </main>
 
   <script>
-    const sql = `SELECT
-  name,
-  role,
-  mission,
-  location
+    const sql = `SELECT *
 FROM ChristopherRhodes
 WHERE curiosity = TRUE;`;
 
     const query = document.getElementById("query");
+    const status = document.getElementById("status");
     const result = document.getElementById("result");
     const title = document.getElementById("title");
     const tagline = document.getElementById("tagline");
@@ -248,14 +257,27 @@ WHERE curiosity = TRUE;`;
       i++;
 
       if (i <= sql.length) {
-        setTimeout(type, 32);
+        setTimeout(type, 34);
       } else {
+        query.innerHTML = sql;
+        status.textContent = "Running profile.sql...";
+
         setTimeout(() => {
+          status.textContent = "✓ Query complete. 3 collections loaded.";
+          status.classList.add("complete");
+
           result.classList.add("show");
           title.classList.add("reveal");
           tagline.classList.add("reveal");
           links.classList.add("reveal");
-        }, 350);
+
+          setTimeout(() => {
+            links.scrollIntoView({
+              behavior: "smooth",
+              block: "center"
+            });
+          }, 800);
+        }, 650);
       }
     }
 
